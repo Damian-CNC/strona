@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -119,82 +118,52 @@
             justify-content: center;
         }
 
-        /* Apple-style Toggle Switch - Desktop: right corner */
-        .theme-toggle {
-            position: absolute;
-            right: 2rem;
-            width: 70px;
-            height: 34px;
-            background-color: rgba(255, 255, 255, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50px;
+        /* DARK MODE BUTTON */
+        .dark-mode-btn {
+            background-color: #F3F4F6;
+            border: none;
             cursor: pointer;
-            transition: all 0.2s ease-in-out;
-            flex-shrink: 0;
+            font-size: 1.3rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            padding: 0;
+            transition: transform 0.2s ease-in-out, background-color 0.3s;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 0 6px;
-            z-index: 10;
-        }
-
-        .theme-toggle:hover {
-            transform: scale(1.05);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-        }
-
-        .theme-toggle:active {
-            transform: scale(0.98);
-        }
-
-        .theme-toggle::before {
-            content: '';
-            position: absolute;
-            width: 26px;
-            height: 26px;
-            background-color: #F3F4F6;
-            border-radius: 50%;
-            top: 2px;
-            left: 3px;
-            transition: all 0.2s ease-in-out;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-            z-index: 2;
-        }
-
-        .toggle-icon {
-            font-size: 16px;
-            z-index: 1;
-            transition: opacity 0.2s ease;
+            justify-content: center;
+            z-index: 1002;
+            position: fixed;
+            right: 2rem;
+            top: 1.2rem;
             line-height: 1;
-            user-select: none;
         }
 
-        .toggle-icon.sun {
-            margin-left: 2px;
-            opacity: 1;
+        [data-theme="dark"] .dark-mode-btn {
+            background-color: #334155;
         }
 
-        .toggle-icon.moon {
-            margin-right: 2px;
-            opacity: 0.5;
+        .dark-mode-btn:hover {
+            transform: scale(1.15);
         }
 
-        [data-theme="dark"] .theme-toggle {
-            background-color: rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 255, 255, 0.25);
+        .theme-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease-in-out;
+            width: 100%;
+            height: 100%;
+            line-height: 1;
         }
 
-        [data-theme="dark"] .theme-toggle::before {
-            transform: translateX(32px);
-            background-color: #F3F4F6;
+        .dark-mode-btn.spinning .theme-icon {
+            animation: spin 0.3s ease-in-out;
         }
 
-        [data-theme="dark"] .toggle-icon.sun {
-            opacity: 0.5;
-        }
-
-        [data-theme="dark"] .toggle-icon.moon {
-            opacity: 1;
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(180deg); }
         }
 
         .nav-menu a {
@@ -1005,11 +974,13 @@
             }
 
             /* Mobile: Toggle to the left of burger menu */
-            .theme-toggle {
+            .dark-mode-btn {
                 position: static;
                 order: 2;
                 margin-left: auto;
                 margin-right: 1rem;
+                top: auto;
+                right: auto;
             }
 
             .burger {
@@ -1017,33 +988,70 @@
                 order: 3;
             }
 
+            /* Mobile dropdown menu - appears below navbar */
             .nav-menu {
                 position: fixed;
-                left: -100%;
                 top: 70px;
+                left: 0;
+                right: 0;
                 flex-direction: column;
-                background-color: var(--navbar-bg);
+                background-color: #F3F4F6;
                 width: 100%;
                 text-align: center;
-                transition: left 0.25s ease;
-                box-shadow: 0 10px 27px rgba(0, 0, 0, 0.05);
-                padding: 2rem 0;
+                padding: 0;
                 order: 4;
                 justify-content: flex-start;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                max-height: 0;
+                overflow: hidden;
+                opacity: 0;
+                transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
+                z-index: 999;
+            }
+
+            [data-theme="dark"] .nav-menu {
+                background-color: #1E293B;
+                border-bottom: 1px solid #334155;
             }
 
             .nav-menu.active {
-                left: 0;
+                max-height: 400px;
+                opacity: 1;
+                padding: 1.5rem 0;
+            }
+
+            .nav-menu li {
+                margin: 0;
+            }
+
+            .nav-menu a {
+                display: block;
+                padding: 1rem 2rem;
+                color: var(--color-text);
+                transition: background-color 0.2s ease, color 0.2s ease;
+            }
+
+            [data-theme="dark"] .nav-menu a {
+                color: var(--navbar-text);
+            }
+
+            .nav-menu a:hover {
+                background-color: rgba(16, 185, 129, 0.1);
+            }
+
+            .nav-menu a::after {
+                display: none;
             }
 
             .nav-container {
-                flex-wrap: wrap;
+                flex-wrap: nowrap;
                 padding: 1rem 1.5rem;
                 min-height: 70px;
             }
 
             .logo {
                 order: 1;
+                flex-shrink: 0;
             }
 
             .about-content {
@@ -1127,9 +1135,8 @@
     <header class="header" id="header">
         <nav class="nav-container">
             <a href="#home" class="logo">SMART<span>CODER</span></a>
-            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-                <span class="toggle-icon sun">☀️</span>
-                <span class="toggle-icon moon">🌙</span>
+            <button class="dark-mode-btn" id="darkModeToggle" aria-label="Toggle dark mode">
+                <span class="theme-icon">🌙</span>
             </button>
             <ul class="nav-menu" id="navMenu">
                 <li><a href="#home">Home</a></li>
@@ -1453,7 +1460,8 @@
         const navMenu = document.getElementById('navMenu');
         const navLinks = navMenu.querySelectorAll('a');
 
-        burger.addEventListener('click', () => {
+        burger.addEventListener('click', (e) => {
+            e.stopPropagation();
             burger.classList.toggle('active');
             navMenu.classList.toggle('active');
         });
@@ -1467,6 +1475,20 @@
             });
         });
 
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768) {
+                const isClickInsideNav = navMenu.contains(e.target);
+                const isClickOnBurger = burger.contains(e.target);
+                const isClickOnToggle = darkModeToggle.contains(e.target);
+                
+                if (!isClickInsideNav && !isClickOnBurger && !isClickOnToggle && navMenu.classList.contains('active')) {
+                    burger.classList.remove('active');
+                    navMenu.classList.remove('active');
+                }
+            }
+        });
+
         // Header Scroll Effect
         const header = document.getElementById('header');
         window.addEventListener('scroll', () => {
@@ -1477,14 +1499,24 @@
             }
         });
 
-        // Theme Toggle - In-memory storage (sandboxed environment)
+        // Dark Mode Toggle - In-memory storage (sandboxed environment)
         let currentTheme = 'light';
-        const themeToggle = document.getElementById('themeToggle');
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const themeIcon = darkModeToggle.querySelector('.theme-icon');
         const htmlElement = document.documentElement;
 
         // Check system preference
         if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
             currentTheme = 'dark';
+        }
+
+        // Update icon based on theme
+        function updateIcon() {
+            if (currentTheme === 'dark') {
+                themeIcon.textContent = '☀️';
+            } else {
+                themeIcon.textContent = '🌙';
+            }
         }
 
         // Apply theme
@@ -1494,14 +1526,20 @@
             } else {
                 htmlElement.removeAttribute('data-theme');
             }
+            updateIcon();
         }
 
         applyTheme(currentTheme);
 
-        // Toggle on click
-        themeToggle.addEventListener('click', () => {
-            currentTheme = currentTheme === 'light' ? 'dark' : 'light';
-            applyTheme(currentTheme);
+        // Toggle on click with animation
+        darkModeToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            darkModeToggle.classList.add('spinning');
+            setTimeout(() => {
+                currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+                applyTheme(currentTheme);
+                darkModeToggle.classList.remove('spinning');
+            }, 150);
         });
 
         // Intersection Observer - animations on scroll (both directions)
